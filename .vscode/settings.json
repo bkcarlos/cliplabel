@@ -1,0 +1,4 @@
+{
+  "go.testFlags": ["-v", "-count", "1", "-tags", "fts5"],
+  "go.testTimeout": "600s"
+}

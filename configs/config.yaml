@@ -1,0 +1,17 @@
+server:
+  port: "6666"
+  name: "clip_label"
+
+sqlite:
+  db_name: "cliplable.db"
+  db_path: "/Users/bkcarlos/code/clip_tools/cliplabel/output"
+
+files:
+  copy_in: false
+  copy_path: "./"
+  is_sync: false
+  sync_type: ""
+
+log:
+  level: debug
+  path: ""
