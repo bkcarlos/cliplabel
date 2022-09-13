@@ -2,14 +2,14 @@ package dao
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
 	"path"
 
 	"github.com/bkcarlos/cliplabel/configs"
 	"github.com/bkcarlos/cliplabel/logger"
-
 	"github.com/mattn/go-sqlite3"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 func getLibSimplePath() string {
@@ -48,9 +48,25 @@ func GetSqlitedb(filepath string) (*sql.DB, error) {
 func InitSqlLiteDB() {
 	var err error
 	dbPath := path.Join(configs.Conf.Sqlite.DBPath, configs.Conf.Sqlite.DBName)
-	ClipLabelDB, err = GetSqlitedb(dbPath)
+	libPath := getLibSimplePath()
+	libSimpleFile := path.Join(libPath, "libsimple", "libsimple")
+	const CustomDriverName = "sqlite3_simple"
+	sql.Register("sqlite3_simple",
+		&sqlite3.SQLiteDriver{
+			Extensions: []string{
+				libSimpleFile,
+			},
+		})
+
+	gromLogger := logger.NewGormLogger(logger.GetLogLevel())
+	ClipLabelDB, err = gorm.Open(&sqlite.Dialector{
+		DriverName: CustomDriverName,
+		DSN:        dbPath,
+	}, &gorm.Config{
+		Logger: gromLogger,
+	})
 	if err != nil {
-		logger.Logger.Errorf("get sqlite db is err:%v", err)
-		panic(fmt.Errorf("get sqlite db is err:%v", err))
+		logger.Errors("init db is err:%v", err)
+		panic(err)
 	}
 }

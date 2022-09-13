@@ -1,6 +1,6 @@
 package dao
 
-import "database/sql"
+import "gorm.io/gorm"
 
 // ClipLabelDB clip label 存储的 db
-var ClipLabelDB *sql.DB
+var ClipLabelDB *gorm.DB

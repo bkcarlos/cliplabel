@@ -2,7 +2,6 @@ package dao
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"testing"
 
@@ -22,40 +21,39 @@ func TestMain(m *testing.M) {
 }
 
 func TestInsert(t *testing.T) {
-	rows, err := ClipLabelDB.Query(`select simple_query('pinyin')`)
-	if err != nil {
-		log.Fatal("query error: ", err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var query string
-		rows.Scan(&query)
-		fmt.Printf("%s\n", query)
-	}
-
-	// rsp, err := ClipLabelDB.Exec(`CREATE VIRTUAL TABLE t1 USING fts5(x, tokenize = 'simple');`)
-	// if err != nil {
-	// 	t.Error(err)
+	// rsp := ClipLabelDB.Exec(`select simple_query('pinyin')`)
+	// if rsp.Error != nil {
+	// 	t.Error(rsp.Error)
 	// 	return
 	// }
+	// fmt.Println(json.Marshal(rsp))
+
+	rsp := ClipLabelDB.Exec(`CREATE VIRTUAL TABLE t1 USING fts5(x, tokenize = 'simple');`)
+	if rsp.Error != nil {
+		t.Error(rsp.Error)
+		return
+	}
 
 	// fmt.Printf("%v", rsp)
 
-	// rsp, err := ClipLabelDB.Exec(`insert into t1(x) values ('周杰伦 Jay Chou:最美的不是下雨天，是曾与你躲过雨的屋檐'),
-	// ('I love China! 我爱中国!'),
-	// ('@English &special _characters."''bacon-&and''-eggs%');`)
-	// if err != nil {
-	// 	t.Error(err)
-	// 	return
-	// }
+	rsp = ClipLabelDB.Exec(`insert into t1(x) values ('周杰伦 Jay Chou:最美的不是下雨天，是曾与你躲过雨的屋檐'),
+	('I love China! 我爱中国!'),
+	('@English &special _characters."''bacon-&and''-eggs%');`)
+	if rsp.Error != nil {
+		t.Error(rsp.Error)
+		return
+	}
 
 	// fmt.Printf("%v\n", rsp)
 
-	// rows, err = ClipLabelDB.Query(`select * from t1;`)
-	// if err != nil {
-	// 	t.Error(err)
-	// 	return
-	// }
+	var rspmap map[string]interface{}
+	err := ClipLabelDB.Exec(`select * from t1;`).Scan(&rspmap)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	fmt.Printf("%v\n", rspmap)
 
 	// defer rows.Close()
 	// for rows.Next() {
@@ -78,16 +76,16 @@ func TestInsert(t *testing.T) {
 	// 	fmt.Printf("%s\n", query)
 	// }
 
-	rows, err = ClipLabelDB.Query(`select simple_highlight(t1, 0, '[', ']') from t1 where x match jieba_query('I');`)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	// rows, err = ClipLabelDB.Query(`select simple_highlight(t1, 0, '[', ']') from t1 where x match simple_query('I');`)
+	// if err != nil {
+	// 	t.Error(err)
+	// 	return
+	// }
 
-	defer rows.Close()
-	for rows.Next() {
-		var query string
-		rows.Scan(&query)
-		fmt.Printf("%s\n", query)
-	}
+	// defer rows.Close()
+	// for rows.Next() {
+	// 	var query string
+	// 	rows.Scan(&query)
+	// 	fmt.Printf("%s\n", query)
+	// }
 }

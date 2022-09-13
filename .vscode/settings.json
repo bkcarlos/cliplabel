@@ -1,4 +1,8 @@
 {
   "go.testFlags": ["-v", "-count", "1", "-tags", "fts5"],
-  "go.testTimeout": "600s"
+  "go.testTimeout": "600s", 
+  "go.testEnvVars": {
+    "LD_LIBRARY_PATH":"/Users/bkcarlos/code/clip_tools/cliplabel/output/lib"
+  }
+
 }
