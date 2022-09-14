@@ -4,7 +4,7 @@ server:
 
 sqlite:
   db_name: "cliplable.db"
-  db_path: "/Users/bkcarlos/code/clip_tools/cliplabel/output"
+  db_path: "/Users/bkcarlos/code/clip_tools/cliplabel/db"
 
 files:
   copy_in: false

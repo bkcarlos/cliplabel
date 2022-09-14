@@ -39,8 +39,7 @@ run:
 	nohup ./$(BINARY_NAME) &
 
 cliplabel:
-	wget -qO- https://github.com/wangfenjin/simple/releases/latest/download/libsimple-osx-x64.zip | tar xf - 
+	if [ ! -d ./libsimple-osx-x64 ]; then wget -qO- https://github.com/wangfenjin/simple/releases/latest/download/libsimple-osx-x64.zip | tar xf - ; fi
 	if [ ! -d ./lib/libsimple ];then mkdir ./lib/libsimple; fi
 	cp -rf libsimple-osx-x64/* ./lib/libsimple/
-	rm -r libsimple-osx-x64
 	$(GOBUILD) --tags fts5 -o $@ main.go

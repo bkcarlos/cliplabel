@@ -45,13 +45,13 @@ func GetSqlitedb(filepath string) (*sql.DB, error) {
 }
 
 // Init 初始化
-func InitSqlLiteDB() {
+func initSqlLiteDB() {
 	var err error
 	dbPath := path.Join(configs.Conf.Sqlite.DBPath, configs.Conf.Sqlite.DBName)
 	libPath := getLibSimplePath()
 	libSimpleFile := path.Join(libPath, "libsimple", "libsimple")
 	const CustomDriverName = "sqlite3_simple"
-	sql.Register("sqlite3_simple",
+	sql.Register(CustomDriverName,
 		&sqlite3.SQLiteDriver{
 			Extensions: []string{
 				libSimpleFile,
@@ -65,6 +65,7 @@ func InitSqlLiteDB() {
 	}, &gorm.Config{
 		Logger: gromLogger,
 	})
+
 	if err != nil {
 		logger.Errors("init db is err:%v", err)
 		panic(err)
